@@ -165,7 +165,7 @@ function fetchAndSaveAttachment(auth, attachment) {
     });
   })
     .then((content) => {
-      var fileName = path.resolve(__dirname, 'files', attachment.name);
+      var fileName = path.resolve(__dirname, 'files', attachment.dateTimeStr.replace(/[-T:.Z]/g,'') + '_' + attachment.name.replaceAll('/','-'));
       return FileHelper.isFileExist(fileName)
         .then((isExist) => {
           if (isExist) {
@@ -196,6 +196,7 @@ function pluckAllAttachments(mails) {
           }
           const attachment = {
             mailId: m.data.id,
+            dateTimeStr: new Date(parseInt(m.data.internalDate)).toISOString(),
             name: pp.filename,
             id: pp.body.attachmentId
           };
@@ -209,6 +210,7 @@ function pluckAllAttachments(mails) {
         }
         const attachment = {
           mailId: m.data.id,
+          dateTimeStr: new Date(parseInt(m.data.internalDate)).toISOString(),
           name: p.filename,
           id: p.body.attachmentId
         };
